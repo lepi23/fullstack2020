@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 const FeedbackDisplay = (props) => (
   <div>
     <p>
-      {props.name} {props.value} 
+      {props.name} {props.value} {props.ending}
     </p>
   </div>
 )
@@ -25,19 +25,66 @@ const Button = (props) => (
 
 const App = () => {
   // tallenna napit omaan tilaansa
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const [clicks, setClicks] = useState ({
+    good: 0, neutral: 0, bad: 0, all: 0, average: 0, positivePercentage: 0  })
 
-  // tilan hallitsijat eri napeille
+  const [otherActions, setOtherActions] = useState ({
+     average: 0, positivePercentage: 0  })
+  
+    
+
+  // tilan käsittelijät eri nappejen klikkauksille
+  
+  const handle = (type) => {
+    const newClicks = getClicks()
+
+    if (type === 'good')
+    {
+      newClicks.good = clicks.good +1
+    }
+    else if (type === 'neutral')
+    {
+      newClicks.neutral = clicks.neutral +1
+    }
+    else if ( type === 'bad')
+    {
+      newClicks.bad = clicks.bad +1
+    }
+    newClicks.all =  clicks.all +1
+    newClicks.positivePercentage =calculatePositivePercentage(newClicks)
+    newClicks.average = calculateAverage(newClicks)
+    setClicks(newClicks)
+  }
+
   const handleGoodClick = () =>{
-    setGood(good +1)
+    handle('good')            
   }
+
   const handleNeutralClick = () =>{
-    setNeutral(neutral +1)
+    handle('neutral')   
   }
+
   const handleBadClick = () =>{
-    setBad(bad +1)
+    handle('bad')     
+  }
+  
+  const calculateAverage = (newClicks) =>{
+    const newAverage = (newClicks.bad * -1 + newClicks.good * 1)/ newClicks.all
+    return newAverage
+  }
+  const calculatePositivePercentage = (newClicks) =>{
+
+    const percentage = (newClicks.good / (newClicks.all)*100)
+    return percentage
+  }
+
+  //apufunktio klikkauksien saamista varten
+  const getClicks = ()  =>
+  {
+    const newClicks = {
+      ...clicks,
+    }
+    return newClicks  
   }
 
   return (
@@ -47,9 +94,12 @@ const App = () => {
       <Button handleClick = {handleNeutralClick} text='Neutral'/>
       <Button handleClick = {handleBadClick} text = 'Bad'/>
       <HeadingDisplay text = 'statistics' />
-      <FeedbackDisplay name = 'good' value = {good}/>
-      <FeedbackDisplay name = 'neutral' value = {neutral}/>
-      <FeedbackDisplay name = 'bad' value = {bad}/>
+      <FeedbackDisplay name = 'good' value = {clicks.good}/>
+      <FeedbackDisplay name = 'neutral' value = {clicks.neutral}/>
+      <FeedbackDisplay name = 'bad' value = {clicks.bad}/>
+      <FeedbackDisplay name = 'all' value = {clicks.all}/>
+      <FeedbackDisplay name = 'average' value ={clicks.average}/>
+      <FeedbackDisplay name = 'positive' value ={clicks.positivePercentage} ending = ' %'/>
     </div>
   )
 }
