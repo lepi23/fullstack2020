@@ -2,13 +2,28 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 //näyttää arvostelun nimen ja sen määrän
-const Statistics = (props) => (
+const FeedbackDisplay = (props) => (
   <div>
     <p>
       {props.name} {props.value} {props.ending}
     </p>
   </div>
 )
+const Statistics = (props) => 
+(
+  <div>
+    <p>
+      <FeedbackDisplay name = 'good' value = {props.stats.good}/>
+      <FeedbackDisplay name = 'neutral' value = {props.stats.neutral}/>
+      <FeedbackDisplay name = 'bad' value = {props.stats.bad}/>
+      <FeedbackDisplay name = 'all' value = {props.stats.all}/>
+      <FeedbackDisplay name = 'average' value ={props.stats.average}/>
+      <FeedbackDisplay name = 'positive' value ={props.stats.positivePercentage} ending = ' %'/>
+    </p>
+  </div>
+)
+
+
 const HeadingDisplay = (props) => (
   <div>
     <h1>
@@ -94,12 +109,7 @@ const App = () => {
       <Button handleClick = {handleNeutralClick} text='Neutral'/>
       <Button handleClick = {handleBadClick} text = 'Bad'/>
       <HeadingDisplay text = 'statistics' />
-      <Statistics name = 'good' value = {clicks.good}/>
-      <Statistics name = 'neutral' value = {clicks.neutral}/>
-      <Statistics name = 'bad' value = {clicks.bad}/>
-      <Statistics name = 'all' value = {clicks.all}/>
-      <Statistics name = 'average' value ={clicks.average}/>
-      <Statistics name = 'positive' value ={clicks.positivePercentage} ending = ' %'/>
+      <Statistics stats = {clicks} />
     </div>
   )
 }
