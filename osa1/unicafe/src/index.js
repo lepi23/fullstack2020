@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 //näyttää arvostelun nimen ja sen määrän
-const FeedbackDisplay = (props) => (
+const Statistics = (props) => (
   <div>
     <p>
       {props.name} {props.value} {props.ending}
@@ -94,12 +94,12 @@ const App = () => {
       <Button handleClick = {handleNeutralClick} text='Neutral'/>
       <Button handleClick = {handleBadClick} text = 'Bad'/>
       <HeadingDisplay text = 'statistics' />
-      <FeedbackDisplay name = 'good' value = {clicks.good}/>
-      <FeedbackDisplay name = 'neutral' value = {clicks.neutral}/>
-      <FeedbackDisplay name = 'bad' value = {clicks.bad}/>
-      <FeedbackDisplay name = 'all' value = {clicks.all}/>
-      <FeedbackDisplay name = 'average' value ={clicks.average}/>
-      <FeedbackDisplay name = 'positive' value ={clicks.positivePercentage} ending = ' %'/>
+      <Statistics name = 'good' value = {clicks.good}/>
+      <Statistics name = 'neutral' value = {clicks.neutral}/>
+      <Statistics name = 'bad' value = {clicks.bad}/>
+      <Statistics name = 'all' value = {clicks.all}/>
+      <Statistics name = 'average' value ={clicks.average}/>
+      <Statistics name = 'positive' value ={clicks.positivePercentage} ending = ' %'/>
     </div>
   )
 }
