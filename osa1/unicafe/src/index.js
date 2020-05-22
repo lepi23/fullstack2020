@@ -2,42 +2,59 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 //näyttää arvostelun nimen ja sen määrän
-const FeedbackDisplay = (props) => (
-  <div>
+const TextDisplay = (props) => {
+  return(
     <p>
-      {props.name} {props.value} {props.ending}
-    </p>
-  </div>
-)
-const Statistics = (props) => 
-(
-  <div>
-    <p>
-      <FeedbackDisplay name = 'good' value = {props.stats.good}/>
-      <FeedbackDisplay name = 'neutral' value = {props.stats.neutral}/>
-      <FeedbackDisplay name = 'bad' value = {props.stats.bad}/>
-      <FeedbackDisplay name = 'all' value = {props.stats.all}/>
-      <FeedbackDisplay name = 'average' value ={props.stats.average}/>
-      <FeedbackDisplay name = 'positive' value ={props.stats.positivePercentage} ending = ' %'/>
-    </p>
-  </div>
-)
-
-
-const HeadingDisplay = (props) => (
-  <div>
-    <h1>
       {props.text}
-    </h1>
+    </p>
+  )
+}
+
+const StatisticLine = (props) => {
+  //.toFixed(2)
+  return(
+    <tbody>
+      <tr>  
+        <td>{props.text} </td>
+        <td>{props.value} {props.ending}</td>
+      </tr>
+    </tbody>
+  )
+}
+
+//näyttää kaikki tilastot
+const Statistics = (props) => {
+  return(
+  <div>
+    <table>
+        <StatisticLine text = 'good' value = {props.stats.good}/>
+        <StatisticLine text = 'neutral' value = {props.stats.neutral}/>
+        <StatisticLine text = 'bad' value = {props.stats.bad}/>
+        <StatisticLine text = 'all' value = {props.stats.all}/>
+        <StatisticLine text = 'average' value ={props.stats.average}/>
+        <StatisticLine text = 'positive' value ={props.stats.positivePercentage} ending = ' %'/>
+    </table>  
   </div>
-)
+  )
+}
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
-  </button>
-)
+const HeadingDisplay = (props) => {
+  return(
+    <div>
+      <h1>
+        {props.text}
+      </h1>
+    </div>
+    )
+}
 
+const Button = (props) => {
+  return(
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
+)
+}
 const App = () => {
   // tallenna napit omaan tilaansa
   const [clicks, setClicks] = useState ({
@@ -46,10 +63,10 @@ const App = () => {
   const [otherActions, setOtherActions] = useState ({
      average: 0, positivePercentage: 0  })
   
-    
+  const [hasFeedback, setHasFeedback] = useState(false)  
 
   // tilan käsittelijät eri nappejen klikkauksille
-  
+  // handle on yleinen käsittelijä klikkaukselle, joka saa parametrinsa palautteen tyypin mukaan
   const handle = (type) => {
     const newClicks = getClicks()
 
@@ -69,6 +86,7 @@ const App = () => {
     newClicks.positivePercentage =calculatePositivePercentage(newClicks)
     newClicks.average = calculateAverage(newClicks)
     setClicks(newClicks)
+    setHasFeedback(true)
   }
 
   const handleGoodClick = () =>{
@@ -99,21 +117,32 @@ const App = () => {
     const newClicks = {
       ...clicks,
     }
-    return newClicks  
+    return newClicks      
+  }
+  //apufunktio määrittelemään näytetäänkö statistiikka
+  const ShowStatistics = () =>
+  {
+    if (hasFeedback)
+    {
+      return(<Statistics stats = {clicks} />)
+    }
+    else
+    {
+      return(<TextDisplay text = 'No feedback given'/>)
+    }
   }
 
-  return (
+  return(
     <div>
       <HeadingDisplay text = 'give feedback' />
       <Button handleClick = {handleGoodClick} text='Good'/>
       <Button handleClick = {handleNeutralClick} text='Neutral'/>
       <Button handleClick = {handleBadClick} text = 'Bad'/>
       <HeadingDisplay text = 'statistics' />
-      <Statistics stats = {clicks} />
-    </div>
-  )
+      <ShowStatistics />
+    </div>)
+        
 }
-
 ReactDOM.render(<App />, 
   document.getElementById('root')
 )
