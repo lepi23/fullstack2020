@@ -50,8 +50,6 @@ const App = (props) => {
   {
     if (votes[selected]+1 > votes[mostVotes])
     {
-      console.log(mostVotes)
-      console.log(votes[selected])
       const newMostVotes = selected
       setMostVotes(newMostVotes)
     }
