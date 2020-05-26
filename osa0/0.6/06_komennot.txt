@@ -1,0 +1,8 @@
+title 0.5
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+selain-->palvelin: {content: "SPAA", date: "2020-05-26T10:43:17.919Z"}
+note over selain:
+aiemmin ladattu JavaScript-tiedoston koodi hoitaa
+muistiinpanon lähettämisen eikä uudelleen käsittelyä
+tarvita
+end note
