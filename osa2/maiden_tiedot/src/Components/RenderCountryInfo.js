@@ -7,20 +7,25 @@ const RenderCountryInfo = ({country}) => {
             <h1>
                 {country.name}
             </h1>
-            <p>
-                capital: {country.capital}
-            </p>
+            <div>
+                <p>
+                    capital {country.capital}
+                </p>
+                <p>
+                    population {country.population}
+                </p>
+            </div>    
             <h2>
                 languages
             </h2>
-            
+            <RenderLanguages country = {country}/>
             <img 
                 src={country.flag} width="500" height="300">
             </img>
+            
     </div>
     )
     
 }
 
 export default RenderCountryInfo
-//<RenderLanguages country = {country}/>

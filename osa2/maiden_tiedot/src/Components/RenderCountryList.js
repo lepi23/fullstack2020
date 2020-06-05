@@ -4,7 +4,7 @@ const RenderCountryList = ({countries}) => {
     return(
         <div>
             {countries.map(country =>
-                <p>
+                <p key = {country.name}>
                     {country.name}
                 </p>
             )} 

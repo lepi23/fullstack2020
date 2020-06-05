@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import SearchForm from './Components/SearchForm'
 import RenderCountries from './Components/RenderCountries'
-import './App.css';
 
 function App() {
   const [countries, setCountries] = useState([])
