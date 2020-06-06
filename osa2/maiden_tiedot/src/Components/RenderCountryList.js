@@ -1,12 +1,11 @@
 import React from 'react'
+import RenderCountry from './RenderCountry'
 
 const RenderCountryList = ({countries}) => {
     return(
         <div>
             {countries.map(country =>
-                <p key = {country.name}>
-                    {country.name}
-                </p>
+                <RenderCountry key = {country.name} country = {country}/>
             )} 
         </div>
     )

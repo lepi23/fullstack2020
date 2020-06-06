@@ -1,5 +1,6 @@
 import React from 'react'
 import RenderLanguages from './RenderLanguages'
+import RenderWeather from './RenderWeather'
 
 const RenderCountryInfo = ({country}) => {
     return(
@@ -22,10 +23,12 @@ const RenderCountryInfo = ({country}) => {
             <img 
                 src={country.flag} width="500" height="300">
             </img>
-            
+            <h1>
+                Weather in {country.capital}
+            </h1>
+            <RenderWeather city = {country.capital} />          
     </div>
     )
-    
 }
 
 export default RenderCountryInfo
