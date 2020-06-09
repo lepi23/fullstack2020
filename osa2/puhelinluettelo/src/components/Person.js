@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Person = ( { person } ) =>
+const Person = ( { person, handleClick } ) =>
 {
 return(
     <tr>
@@ -9,6 +9,11 @@ return(
         </td>
         <td>
             {person.number}
+        </td>
+        <td>
+            <button onClick = {handleClick}>
+                delete
+            </button>
         </td>
     </tr>
     )   

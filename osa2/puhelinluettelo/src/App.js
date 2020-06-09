@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import RenderPeople from './components/RenderPeople'
 import PersonForm from './components/PersonForm'
 import FilterForm from './components/FilterForm'
+import personService from './services/persons'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
+      personService
+        .getAll()
+          .then(initialPersons => {
+            setPersons(initialPersons)
+          })
   }, [])
-  console.log('render', persons.length, 'notes')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterWord, setFilterWord] = useState('')
@@ -28,19 +25,42 @@ const App = () => {
     const names = persons.map((person) => person.name)
     if (names.indexOf(newName) >= 0)
     {
-        window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already on the phonebook. Do you want to add a new number?`)) { 
+          const person = persons.find(n => n.name === newName)
+          const changedPerson = { ...person, number : newNumber }
+
+        personService
+          .update(changedPerson.id, changedPerson)
+            .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
+          })
+      }
+      else{
+        window.alert(`${newName}'s number was not changed`)
+      }
+          
     }
     else{
 
       const personObject = {
+      id : persons.length +1,  
       name : newName,
-      id : persons.length,
       number : newNumber
       }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
-    }  
+      personService
+        .create(personObject)
+          .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          })
+          .catch(error => {
+            alert(
+              `person '${personObject.name}' was not added succesfully
+              ${error}`
+            )
+          })
+    }
+    setNewName('')
+    setNewNumber('') 
   }
   // nimen muutoksen tapahtumakäsittelijä
   const handleNameChange = (event) => {
