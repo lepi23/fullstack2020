@@ -18,10 +18,7 @@ const RenderCountries = ({countries}) => {
         {
             return(
                 <div>
-                <p>
-                yksi löytyi
-                </p>
-                <RenderCountryInfo country = {countries[0]} />
+                    <RenderCountryInfo country = {countries[0]} />
                 </div>
             )
            
