@@ -3,7 +3,7 @@ import RenderCountryInfo from './RenderCountryInfo'
 import RenderCountryList from './RenderCountryList'
 
 // renderöi informaatiota hausta tai maista hakuparametrien mukaan
-const RenderCountries = ({countries}) => {
+const RenderPage = ({countries}) => {
     if (countries.length < 1)
     {
         return(
@@ -18,7 +18,7 @@ const RenderCountries = ({countries}) => {
         {
             return(
                 <div>
-                    <RenderCountryInfo country = {countries[0]} />
+                <RenderCountryInfo country = {countries[0]} />
                 </div>
             )
            
@@ -43,4 +43,4 @@ const RenderCountries = ({countries}) => {
     
 }
 
-export default RenderCountries
+export default RenderPage

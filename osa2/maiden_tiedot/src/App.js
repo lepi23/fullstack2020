@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import SearchForm from './Components/SearchForm'
-import RenderCountries from './Components/RenderCountries'
-import './App.css';
+import RenderPage from './Components/RenderPage'
 
 function App() {
   const [countries, setCountries] = useState([])
@@ -11,14 +10,14 @@ function App() {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
-        console.log('promise fulfilled')
+        //console.log('promise fulfilled')
         setCountries(response.data)
       })
   },[])
 
   const [selectedCountries, setSelectedCountries] = useState(countries)
 
-  console.log('render', countries.length, 'countries')
+  //console.log('render', countries.length, 'countries')
   const [searchWord, setSearchWord] = useState('')
 
   const handleSearchWordChange = (event ) => {
@@ -31,7 +30,7 @@ function App() {
   return (
     <div className="App">
       <SearchForm searchWord = {searchWord} handleSearchWord = {handleSearchWordChange}/>
-      <RenderCountries countries = {selectedCountries}/>
+      <RenderPage countries = {selectedCountries}/>
     </div>  
   );
 }
