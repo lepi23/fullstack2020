@@ -11,7 +11,7 @@ return(
             {person.number}
         </td>
         <td>
-            <button onClick = {handleClick}>
+            <button onClick = {handleClick} name = {person.name} id = {person.id}>
                 delete
             </button>
         </td>

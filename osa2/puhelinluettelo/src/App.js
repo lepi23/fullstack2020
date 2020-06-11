@@ -3,6 +3,8 @@ import RenderPeople from './components/RenderPeople'
 import PersonForm from './components/PersonForm'
 import FilterForm from './components/FilterForm'
 import personService from './services/persons'
+import SuccessNotification from './components/SuccessNotification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -18,6 +20,8 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterWord, setFilterWord] = useState('')
   const [showAll, setShowAll] = useState(false)
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // Henkilön lisäys puhelinluetteloon
   const addPerson = (event) => {
@@ -27,23 +31,26 @@ const App = () => {
     {
       if (window.confirm(`${newName} is already on the phonebook. Do you want to add a new number?`)) { 
           const person = persons.find(n => n.name === newName)
-          const changedPerson = { ...person, number : newNumber }
-
+          const changedPerson = { ...person, number : newNumber }         
         personService
           .update(changedPerson.id, changedPerson)
-            .then(returnedPerson => {
+          .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
+            handleSuccessMessage(`${newName} succesfully changed`)
           })
+          .catch(error =>{
+            console.log(error)
+            handleErrorMessage(`Information of ${newName} has already been removed from the server`)
+          })         
       }
       else{
-        window.alert(`${newName}'s number was not changed`)
+        handleSuccessMessage(`${newName} was not changed`)
       }
           
     }
     else{
 
-      const personObject = {
-      id : persons.length +1,  
+      const personObject = { 
       name : newName,
       number : newNumber
       }
@@ -51,17 +58,42 @@ const App = () => {
         .create(personObject)
           .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          handleSuccessMessage(`${newName} was added to the book`)
           })
           .catch(error => {
-            alert(
-              `person '${personObject.name}' was not added succesfully
-              ${error}`
-            )
+            handleErrorMessage(`person '${personObject.name}' was not added succesfully
+              ${error}`)
           })
     }
     setNewName('')
     setNewNumber('') 
   }
+  //henkilön poisto luettelosta
+  const removePerson = (event) => {
+    event.preventDefault()
+    const RName = event.target.name
+    const RId = event.target.id
+    
+    if (window.confirm(`Delete ${RName}?`)) { 
+      personService.remove(RId)
+      const newPersons = persons.filter(person => person.id.toString() !== RId)
+      setPersons(newPersons) } 
+      handleSuccessMessage(`${RName} succesfully removed`)
+      
+  }
+  const handleSuccessMessage = (message) =>{
+    setSuccessMessage(message)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 1000)
+  }
+  const handleErrorMessage = (message) =>{
+    setErrorMessage(message)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 4000)
+  }
+  
   // nimen muutoksen tapahtumakäsittelijä
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -75,17 +107,20 @@ const App = () => {
 
 const personsToShow = showAll
   ? persons
-  : persons.filter(person => person.name.toLowerCase().includes(filterWord.toLowerCase())) //.toLowerCase().includes(filterWord.toLowerCase))
+  : persons.filter(person => person.name.toLowerCase().includes(filterWord.toLowerCase()))
+
 
   return (
     <div>
+      <SuccessNotification message = {successMessage}/>
+      <ErrorNotification message = {errorMessage}/>
       <h2>Phonebook</h2>
       <FilterForm filterWord = {filterWord} handleFilterChange = {handleFilterChange}/>
       <h2>Add a new</h2>
       <PersonForm handleNameChange ={handleNameChange} handleNumberChange ={handleNumberChange} addPerson = {addPerson} newName = {newName} newNumber = {newNumber} />
       <h2>Numbers</h2>
       <table>
-        <RenderPeople numbers={personsToShow} />
+        <RenderPeople numbers={personsToShow} handleClick = {removePerson} />
       </table> 
     </div>
     
