@@ -19,9 +19,9 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterWord, setFilterWord] = useState('')
-  const [showAll, setShowAll] = useState(false)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+
 
   // Henkilön lisäys puhelinluetteloon
   const addPerson = (event) => {
@@ -29,24 +29,7 @@ const App = () => {
     const names = persons.map((person) => person.name)
     if (names.indexOf(newName) >= 0)
     {
-      if (window.confirm(`${newName} is already on the phonebook. Do you want to add a new number?`)) { 
-          const person = persons.find(n => n.name === newName)
-          const changedPerson = { ...person, number : newNumber }         
-        personService
-          .update(changedPerson.id, changedPerson)
-          .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
-            handleSuccessMessage(`${newName} succesfully changed`)
-          })
-          .catch(error =>{
-            console.log(error)
-            handleErrorMessage(`Information of ${newName} has already been removed from the server`)
-          })         
-      }
-      else{
-        handleSuccessMessage(`${newName} was not changed`)
-      }
-          
+      changeNumber()         
     }
     else{
 
@@ -68,6 +51,27 @@ const App = () => {
     setNewName('')
     setNewNumber('') 
   }
+  //numeron muutos
+  const changeNumber = () =>{
+    if (window.confirm(`${newName} is already on the phonebook. Do you want to add a new number?`)) { 
+      const person = persons.find(n => n.name === newName)
+      const changedPerson = { ...person, number : newNumber } 
+      console.log(changedPerson.number)   
+    personService
+      .update(changedPerson.id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== changedPerson.id ? person : changedPerson))
+        handleSuccessMessage(`${newName} succesfully changed`) 
+      })
+      .catch(error =>{
+        console.log(error)
+        handleErrorMessage(`Information of ${newName} has already been removed from the server`)
+      })         
+    }
+    else{
+      handleSuccessMessage(`${newName} was not changed`)
+      }  
+    }
   //henkilön poisto luettelosta
   const removePerson = (event) => {
     event.preventDefault()
@@ -96,19 +100,19 @@ const App = () => {
   
   // nimen muutoksen tapahtumakäsittelijä
   const handleNameChange = (event) => {
+    event.preventDefault()
     setNewName(event.target.value)
   }
   const handleNumberChange = (event) => {
+    event.preventDefault()
     setNewNumber(event.target.value)
   }
-  const handleFilterChange = (event ) => {
+  const handleFilterChange = ( event ) => {
+    event.preventDefault()
     setFilterWord(event.target.value)
   }
-
-const personsToShow = showAll
-  ? persons
-  : persons.filter(person => person.name.toLowerCase().includes(filterWord.toLowerCase()))
-
+  
+  const personsToShow = persons.filter(Boolean).filter(person => person.name.toLowerCase().includes(filterWord.toLowerCase()))
 
   return (
     <div>
@@ -125,7 +129,6 @@ const personsToShow = showAll
     </div>
     
   )
-
 }
 
 export default App

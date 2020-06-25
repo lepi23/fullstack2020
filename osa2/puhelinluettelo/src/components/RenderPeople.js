@@ -1,6 +1,7 @@
 import React from 'react'
 import Person from './Person'
 const RenderPeople = ( { numbers, handleClick } ) =>{
+  
   return(
     <tbody>
       {numbers.map(person =>
